@@ -1,37 +1,25 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import HelloWorldApp from './src/screens/helloWorld';
+import { useState } from 'react';
+import { Button, Text, View } from 'react-native';
+import NativeTreinoModule from './src/native/NativeTreinoModule';
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [resultado, setResultado] = useState('');
+
+  const testar = async () => {
+    try {
+      const resposta = await NativeTreinoModule.ping();
+      setResultado(resposta);
+    } catch (e) {
+      setResultado('Erro: ' + String(e));
+    }
+  };
 
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
-  );
-}
-
-function AppContent() {
-  return (
-    <View style={styles.container}>
-      <HelloWorldApp />
+    <View style={{ flex: 1, justifyContent: 'center', padding: 24 }}>
+      <Button title="Testar ping" onPress={testar} />
+      <Text style={{ marginTop: 16 }}>{resultado}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
